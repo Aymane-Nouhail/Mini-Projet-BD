@@ -171,30 +171,7 @@ query_btn.grid(row = 7, column=0, columnspan=2, padx=10, pady=10,ipadx=100)
 #Create a Clear Button
 clear_btn = Button(root_maison, text="Clear/Erase all records in database", command=clear)
 clear_btn.grid(row=8, column=0, columnspan=2, padx=10, pady=10,ipadx=100)
-'''
-class Table:
-    def __init__(self,root):
-        # code for creating table
-        for i in range(total_rows):
-            for j in range(total_columns):
 
-                self.e = Entry(root, width=20, fg='blue',
-                font=('Arial',16,'bold'))
-                self.e.grid(row=i, column=j)
-                self.e.insert(END, lst[i][j])
-
-# take the data
-lst = [(1,'Raj','Mumbai',19),
-(2,'Aaryan','Pune',18),
-(3,'Vaishnavi','Mumbai',20),
-(4,'Rachna','Mumbai',21),
-(5,'Shubham','Delhi',21)]
-
-# find total number of rows and
-# columns in list
-total_rows = len(lst)
-total_columns = len(lst[0])
-'''
 
 def search_new_window():
     top = Toplevel()
@@ -218,7 +195,7 @@ def search_new_window():
     print(records)
     for i in range(len(records)):
         for j in range(len(records[0])):
-            query_label = Entry(top, width=20,font=('Arial',16,'bold'))
+            query_label = Entry(top, width=20,font=('Arial',10,'bold'))
             query_label.grid(row=i,column=j)
             query_label.insert(END, records[i][j])
     conn.commit()
