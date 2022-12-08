@@ -77,19 +77,30 @@ def query():
     top = Toplevel()
     top.title("Table of Results")
     top.iconbitmap("./marisa_icon.ico")
-    top.geometry("1000x400")
+    top.geometry("1150x400")
     conn = sqlite3.connect('DB_project.db')
     c = conn.cursor()
+    #top.configure(bg='green')
     #Selecting from table
     c.execute("SELECT * from maison;")
     records = c.fetchall()
     records = [("identifiant","nom","loyer","nombre de chambres", "nombre des personnes max.","l'ile de la maison")] + records
     print(records)
+    style = Style()
+    style.configure("BW.TLabel", foreground="blue",background="white")
     for i in range(len(records)):
         for j in range(len(records[0])):
-            query_label = Entry(top, width=20,font=('Arial',10,'bold'))
-            query_label.grid(row=i,column=j)
-            query_label.insert(END, records[i][j])
+            if i==0:
+                query_label = Entry(top,width=25,font=('Calibri',11,'bold italic'),style="BW.TLabel")
+                query_label.grid(row=i,column=j)
+                query_label.insert(END, records[i][j])
+                #query_label.config(state=DISABLED)
+                #query_label.configure(style="BW.TLabel")
+            else:
+                query_label = Entry(top,width=25,font=('Calibri',11,'bold'))
+                query_label.grid(row=i,column=j)
+                query_label.insert(END, records[i][j])
+                #query_label.config(state=DISABLED)
     conn.commit()
     conn.close()
     #clearing all windows
