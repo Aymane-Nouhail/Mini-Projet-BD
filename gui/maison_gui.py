@@ -48,9 +48,14 @@ def clear_input_lines_maison():
 def submit():
     conn = sqlite3.connect('DB_project.db')
     #checking if constraint is validated :
-    if loyer_maison.get() != '' and int(loyer_maison.get())<100:
-         print_label= Label(root_maison, text="The query has failed, loyer value should be greater than 100.")
-         print_label.grid(row=11,column=0)
+    if id_maison.get() == '':
+        print_label= Label(root_maison, text="The query has failed, id can't be empty")
+        print_label.grid(row=12,column=0)
+        return
+    if (loyer_maison.get() != '' and int(loyer_maison.get())<100):
+         print_label= Label(root_maison, text="The query has failed, loyer can't be smaller than 100.")
+         print_label.grid(row=12,column=0)
+         return
     else:
         c = conn.cursor()
         #Inserting into table
@@ -66,9 +71,8 @@ def submit():
         )
         conn.commit()
         conn.close()
-    print_label= Label(root_maison, text="The query has failed, loyer value should be greater than 100.")
     print_label = Label(root_maison, text="The query has been added to the database successfully.")
-    print_label.grid(row=11,column=0)
+    print_label.grid(row=12,column=0)
     clear_input_lines_maison()
     return
 
@@ -117,7 +121,7 @@ def clear():
         conn.close()
         top.destroy()
         print_label = Label(root_maison, text='The database has been cleared successfully.')
-        print_label.grid(row=11,column=0,padx=0)
+        print_label.grid(row=12,column=0,padx=0)
     top = Toplevel()
     top.title("Confirmation Prompt")
     top.iconbitmap("./marisa_icon.ico")
@@ -126,9 +130,9 @@ def clear():
     c = conn.cursor()
     print_label= Label(top, text="Are you sure you want to clear the database?")
     print_label.grid(row=0,column=0,padx=80)
-    yes_btn = Button(top, text = "yes", command=clear_all)
+    yes_btn = Button(top, text = "Yes", command=clear_all)
     yes_btn.grid(row=1, column=0, padx=20,pady=(10,0))
-    no_btn = Button(top, text = "no", command=top.destroy)
+    no_btn = Button(top, text = "No", command=top.destroy)
     no_btn.grid(row=2, column=0, padx=20,pady=(10,0))
     conn.commit()
     conn.close()
@@ -138,7 +142,7 @@ def search():
     top = Toplevel()
     top.title("Search Results")
     top.iconbitmap("./marisa_icon.ico")
-    top.geometry("1000x400")
+    top.geometry("1150x400")
     conn = sqlite3.connect('DB_project.db')
     c = conn.cursor()
     c.execute("""SELECT * FROM maison WHERE
@@ -154,11 +158,21 @@ def search():
     records = c.fetchall()
     records = [("identifiant","nom","loyer","nombre de chambres", "nombre des personnes max.","l'ile de la maison")] + records
     print(records)
+    style = Style()
+    style.configure("BW.TLabel", foreground="blue",background="white")
     for i in range(len(records)):
         for j in range(len(records[0])):
-            query_label = Entry(top, width=20,font=('Arial',10,'bold'))
-            query_label.grid(row=i,column=j)
-            query_label.insert(END, records[i][j])
+            if i==0:
+                query_label = Entry(top,width=25,font=('Calibri',11,'bold italic'),style="BW.TLabel")
+                query_label.grid(row=i,column=j)
+                query_label.insert(END, records[i][j])
+                #query_label.config(state=DISABLED)
+                #query_label.configure(style="BW.TLabel")
+            else:
+                query_label = Entry(top,width=25,font=('Calibri',11,'bold'))
+                query_label.grid(row=i,column=j)
+                query_label.insert(END, records[i][j])
+                #query_label.config(state=DISABLED)
     conn.commit()
     conn.close()
     #clearing all windows
