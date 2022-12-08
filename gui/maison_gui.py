@@ -32,13 +32,24 @@ CREATE TABLE maison(
 );
 """)
 '''
-#create submit function
+
+################################    defining functions      ##############################################""
+
+def clear_input_lines():
+    id_maison.delete(0,END)
+    nom_maison.delete(0,END)
+    nb_chambres.delete(0,END)
+    loyer_maison.delete(0,END)
+    nb_personnes_max.delete(0,END)
+    nom_ile.delete(0,END)
+
+#Submit function : INSERT INTO maison VALUES (user_input)
 def submit():
     conn = sqlite3.connect('DB_project.db')
     #checking if constraint is validated :
-    if(int(loyer_maison.get())<100):
+    if loyer_maison.get() != '' and int(loyer_maison.get())<100:
          print_label= Label(root_maison, text="The query has failed, loyer value should be greater than 100.")
-         print_label.grid(row=10,column=0)
+         print_label.grid(row=11,column=0)
     else:
         c = conn.cursor()
         #Inserting into table
@@ -57,15 +68,10 @@ def submit():
     #clear text boxes
     print_label= Label(root_maison, text="The query has failed, loyer value should be greater than 100.")
     print_label = Label(root_maison, text="The query has been added to the database successfully.")
-    print_label.grid(row=10,column=0)
-    id_maison.delete(0,END)
-    nom_maison.delete(0,END)
-    nb_chambres.delete(0,END)
-    loyer_maison.delete(0,END)
-    nb_personnes_max.delete(0,END)
-    nom_ile.delete(0,END)
+    print_label.grid(row=11,column=0)
+    clear_input_lines()
 
-#create Query function
+#Query Function : Select * from Maison
 def query():
     top = Toplevel()
     top.title("Search Results")
@@ -86,21 +92,31 @@ def query():
     conn.commit()
     conn.close()
     #clearing all windows
-    id_maison.delete(0,END)
-    nom_maison.delete(0,END)
-    nb_chambres.delete(0,END)
-    loyer_maison.delete(0,END)
-    nb_personnes_max.delete(0,END)
-    nom_ile.delete(0,END)
+    clear_input_lines()
 
-#create clear function
+#clear function : DELETE FROM maison
 def clear():
+    def clear_all():
+        conn = sqlite3.connect('DB_project.db')
+        c = conn.cursor()
+        c.execute("DELETE FROM maison;")
+        conn.commit()
+        conn.close()
+        top.destroy()
+    top = Toplevel()
+    top.title("Confirmation Prompt")
+    top.iconbitmap("./marisa_icon.ico")
+    top.geometry("400x100")
     conn = sqlite3.connect('DB_project.db')
     c = conn.cursor()
-    #deleting everything from table
-    #c.execute("DELETE from maison;")
+    print_label= Label(top, text="Are you sure you want to clear the database?")
+    print_label.grid(row=0,column=0,padx=80)
+    yes_btn = Button(top, text = "yes", command=clear_all)
+    yes_btn.grid(row=1, column=0, padx=20,pady=(10,0))
+    no_btn = Button(top, text = "no", command=top.destroy)
+    no_btn.grid(row=2, column=0, padx=20,pady=(10,0))
     print_label = Label(root_maison, text='The database has been cleared successfully.')
-    print_label.grid(row=10,column=0,padx=0)
+    print_label.grid(row=11,column=0,padx=0)
     conn.commit()
     conn.close()
 
@@ -132,12 +148,7 @@ def search():
     conn.commit()
     conn.close()
     #clearing all windows
-    id_maison.delete(0,END)
-    nom_maison.delete(0,END)
-    nb_chambres.delete(0,END)
-    loyer_maison.delete(0,END)
-    nb_personnes_max.delete(0,END)
-    nom_ile.delete(0,END)
+    clear_input_lines()
 
 #create delete function
 def remove():
@@ -155,15 +166,10 @@ def remove():
     })
     conn.commit()
     conn.close()
-    id_maison.delete(0,END)
-    nom_maison.delete(0,END)
-    nb_chambres.delete(0,END)
-    loyer_maison.delete(0,END)
-    nb_personnes_max.delete(0,END)
-    nom_ile.delete(0,END)
+    clear_input_lines()
 
     
-        
+################################    defining Entry Fields     ##############################################
 
 id_maison = Entry(root_maison,width=30)
 id_maison.grid(row=0, column=1, padx=20,pady=(10,0))
@@ -183,7 +189,7 @@ nb_personnes_max.grid(row=4, column=1, padx=20)
 nom_ile = Entry(root_maison,width=30)
 nom_ile.grid(row=5, column=1, padx=20)
 
-#creating text box labels :
+################################    defining text labels     ##############################################
 id_maison_label = Label(root_maison, text="Identifiant de la maison")
 id_maison_label.grid(row=0, column=0,pady=(10,0))
 
@@ -205,7 +211,7 @@ nom_ile_label = Label(root_maison, text="Nom d'ile de la maison")
 nom_ile_label.grid(row=5, column=0)
 
 
-#Buttons 
+################################    defining Buttons     ##############################################
 
 #Create Submit Button
 submit_btn = Button(root_maison, text = "Add record to database", command=submit)
