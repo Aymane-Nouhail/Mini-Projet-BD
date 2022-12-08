@@ -35,13 +35,14 @@ CREATE TABLE maison(
 
 ################################    defining functions      ##############################################""
 
-def clear_input_lines():
+def clear_input_lines_maison():
     id_maison.delete(0,END)
     nom_maison.delete(0,END)
     nb_chambres.delete(0,END)
     loyer_maison.delete(0,END)
     nb_personnes_max.delete(0,END)
     nom_ile.delete(0,END)
+    return
 
 #Submit function : INSERT INTO maison VALUES (user_input)
 def submit():
@@ -65,16 +66,16 @@ def submit():
         )
         conn.commit()
         conn.close()
-    #clear text boxes
     print_label= Label(root_maison, text="The query has failed, loyer value should be greater than 100.")
     print_label = Label(root_maison, text="The query has been added to the database successfully.")
     print_label.grid(row=11,column=0)
-    clear_input_lines()
+    clear_input_lines_maison()
+    return
 
 #Query Function : Select * from Maison
 def query():
     top = Toplevel()
-    top.title("Search Results")
+    top.title("Table of Results")
     top.iconbitmap("./marisa_icon.ico")
     top.geometry("1000x400")
     conn = sqlite3.connect('DB_project.db')
@@ -92,7 +93,8 @@ def query():
     conn.commit()
     conn.close()
     #clearing all windows
-    clear_input_lines()
+    clear_input_lines_maison()
+    return
 
 #clear function : DELETE FROM maison
 def clear():
@@ -103,6 +105,8 @@ def clear():
         conn.commit()
         conn.close()
         top.destroy()
+        print_label = Label(root_maison, text='The database has been cleared successfully.')
+        print_label.grid(row=11,column=0,padx=0)
     top = Toplevel()
     top.title("Confirmation Prompt")
     top.iconbitmap("./marisa_icon.ico")
@@ -115,10 +119,9 @@ def clear():
     yes_btn.grid(row=1, column=0, padx=20,pady=(10,0))
     no_btn = Button(top, text = "no", command=top.destroy)
     no_btn.grid(row=2, column=0, padx=20,pady=(10,0))
-    print_label = Label(root_maison, text='The database has been cleared successfully.')
-    print_label.grid(row=11,column=0,padx=0)
     conn.commit()
     conn.close()
+    return
 
 def search():
     top = Toplevel()
@@ -148,7 +151,8 @@ def search():
     conn.commit()
     conn.close()
     #clearing all windows
-    clear_input_lines()
+    clear_input_lines_maison()
+    return records[1:]
 
 #create delete function
 def remove():
@@ -166,9 +170,12 @@ def remove():
     })
     conn.commit()
     conn.close()
-    clear_input_lines()
+    clear_input_lines_maison()
+    return
 
-    
+#create a modify function
+def mofidy():
+    return
 ################################    defining Entry Fields     ##############################################
 
 id_maison = Entry(root_maison,width=30)
@@ -233,10 +240,8 @@ search_btn.grid(row=9, column=0, columnspan=2, padx=10, pady=10,ipadx=100)
 remove_btn = Button(root_maison, text="Remove an element from the database",command=remove)
 remove_btn.grid(row=10, column=0, columnspan=2, padx=10, pady=10,ipadx=100)
 
-'''  
-search_btn = Button(root_maison, text="Search for a record in database", command=search)
-search_btn.grid(row=9, column=0, columnspan=2, padx=10, pady=10,ipadx=100)
-'''
+modify_btn = Button(root_maison,text="Modify an element from the database",command=mofidy)
+modify_btn.grid(row=11,column=0,columnspan=2,padx=10,pady=10,ipadx=100)
 #commit changes
 conn.commit()
 root_maison.mainloop()
