@@ -17,10 +17,10 @@ c = conn.cursor()
 #enabling the use of foreign keys 
 conn.execute("PRAGMA foreign_keys = 1")
 #c.execute("DROP TABLE maison;")
-'''
+
 #create a table
 c.execute("""
-CREATE TABLE maison(
+CREATE TABLE IF NOT EXISTS maison(
    ID_maison INT,
    nom_maison text,
    Loyer DECIMAL(15,2),
@@ -31,7 +31,6 @@ CREATE TABLE maison(
    CONSTRAINT loyer_min CHECK(loyer>=100)
 );
 """)
-'''
 
 ################################    defining functions      ##############################################""
 
@@ -137,6 +136,8 @@ def clear():
     conn.commit()
     conn.close()
     return
+
+
 
 def search():
     top = Toplevel()
