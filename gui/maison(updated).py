@@ -7,7 +7,7 @@ from configparser import ConfigParser
 
 root = Tk()
 root.title('Codemy.com - TreeBase')
-#root.iconbitmap('c:/gui/codemy.ico')
+root.iconbitmap('./marisa_icon.ico')
 root.geometry("1000x550")
 
 # Read our config file and get colors
@@ -73,37 +73,41 @@ def search_records():
 
 	# Create a cursor instance
 	c = conn.cursor()
-
+	records = []
 	#c.execute("SELECT rowid, * FROM maison WHERE nom_maison like ? OR loyer like=?", (lookup_record_nom_maison,),(lookup_record_loyer,))
-	c.execute("SELECT rowid, * FROM maison WHERE nom_maison like :nom_maison",
-		{
-			'nom_maison':lookup_record_nom_maison,
-		})
-	records = c.fetchall()
-	c.execute("SELECT rowid, * FROM maison WHERE loyer=:loyer",
-		{
-			'loyer':lookup_record_loyer,
-		})
-	records += c.fetchall()
-	c.execute("SELECT rowid, * FROM maison WHERE nb_chambres=:nb_chambres",
-		{
-			'nb_chambres':lookup_record_nb_chambres,
-		})
-	records += c.fetchall()
+	if lookup_record_nom_maison != '':
+		c.execute("SELECT rowid, * FROM maison WHERE nom_maison like :nom_maison",
+			{
+				'nom_maison':lookup_record_nom_maison,
+			})
+		records = c.fetchall()
+	if lookup_record_loyer != '':
+		c.execute("SELECT rowid, * FROM maison WHERE loyer=:loyer",
+			{
+				'loyer':lookup_record_loyer,
+			})
+		records += c.fetchall()
+	if lookup_record_nb_chambres != '':
+		c.execute("SELECT rowid, * FROM maison WHERE nb_chambres=:nb_chambres",
+			{
+				'nb_chambres':lookup_record_nb_chambres,
+			})
+		records += c.fetchall()
+	
 	'''c.execute("SELECT rowid, * FROM maison WHERE nb_personnes_max=:nb_personnes_max",
 		{
 			'nb_personnes_max':lookup_record_nb_personnes_max,
 		})
 	records += c.fetchall()'''
-	c.execute("SELECT rowid, * FROM maison WHERE nom_ile like :nom_ile",
-		{
-			'nom_ile':lookup_record_nom_ile,
-		})
-	records += c.fetchall()
+	if lookup_record_nom_ile != '':
+		c.execute("SELECT rowid, * FROM maison WHERE nom_ile like :nom_ile",
+			{
+				'nom_ile':lookup_record_nom_ile,
+			})
+		records += c.fetchall()
 	# Add our data to the screen
 	global count
 	count = 0
-	
 	#for record in records:
 	#	print(record)
 
