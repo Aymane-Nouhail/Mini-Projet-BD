@@ -7,7 +7,7 @@ from configparser import ConfigParser
 
 root = Tk()
 root.title('Codemy.com - TreeBase')
-root.iconbitmap('./marisa_icon.ico')
+root.iconbitmap('../marisa_icon.ico')
 root.geometry("1000x550")
 
 # Read our config file and get colors
